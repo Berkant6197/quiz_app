@@ -18,6 +18,15 @@ def run_quiz():
             print(f"❌ Yanlış! Doğru cevap: {q['answer']}")
 
     total_questions = len(questions)
+    percentage = (score / total_questions) * 100
+
+    print(f"\n🎯 Quiz Bitti! Doğru sayısı: {score}/{total_questions}")
+    print(f"📊 Başarı Oranı: %{percentage:.2f}")
+
+    if percentage >= 50:
+        print("🥳 Tebrikler, başarılı oldunuz!")
+    else:
+        print("😢 Üzgünüz, başarısız oldunuz. Tekrar deneyin!")
 
 if __name__ == "__main__":
     run_quiz()
