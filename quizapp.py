@@ -17,7 +17,6 @@ def run_quiz():
         else:
             print(f"❌ Yanlış! Doğru cevap: {q['answer']}")
 
-    print(f"\nQuiz bitti. Toplam skorunuz: {score}/{len(questions)}")
 
 if __name__ == "__main__":
     run_quiz()
