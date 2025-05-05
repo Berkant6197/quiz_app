@@ -17,6 +17,7 @@ def run_quiz():
         else:
             print(f"❌ Yanlış! Doğru cevap: {q['answer']}")
 
+    total_questions = len(questions)
 
 if __name__ == "__main__":
     run_quiz()
