@@ -1,4 +1,5 @@
 from questions import questions
+import time  # Süre ölçmek için bu modülü ekliyoruz
 
 def run_quiz():
     print("🎓 Quiz'e Hoş Geldiniz!")
@@ -6,6 +7,7 @@ def run_quiz():
     print(f"\nHoş geldin, {name}! Quiz başlıyor...\n")
 
     score = 0
+    start_time = time.time()  # ⏱️ Quiz başlangıç zamanı
 
     for index, q in enumerate(questions):
         print(f"Soru {index + 1}: {q['question']}")
@@ -25,11 +27,17 @@ def run_quiz():
         else:
             print(f"❌ Yanlış! Doğru cevap: {q['answer']}\n")
 
+    end_time = time.time()  # ⏱️ Quiz bitiş zamanı
+    duration = end_time - start_time  # Süreyi hesapla
+    minutes = int(duration // 60)
+    seconds = int(duration % 60)
+
     total_questions = len(questions)
     percentage = (score / total_questions) * 100
 
     print(f"\n🎯 Quiz Bitti! {name}, doğru sayın: {score}/{total_questions}")
     print(f"📊 Başarı Oranın: %{percentage:.2f}")
+    print(f"⏰ Toplam Süre: {minutes} dakika {seconds} saniye")
 
     if percentage >= 80:
         print(f"🏆 Harika iş çıkardın, {name}!")
