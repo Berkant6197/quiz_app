@@ -8,7 +8,7 @@ questions = [
         "question": "Python'un kurucusu kimdir?",
         "options": ["A. Bill Gates", "B. Guido van Rossum", "C. Steve Jobs", "D. Linus Torvalds"],
         "answer": "B"
-    }
+    },
     {
         "question": "Python'da bir değişken tanımlamak için hangi sembol kullanılır?",
         "options": ["A) =", "B) :", "C) ==", "D) ->"],

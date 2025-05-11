@@ -1,3 +1,4 @@
+import random 
 from questions import questions
 import time  # Süre ölçmek için bu modülü ekliyoruz
 
@@ -7,6 +8,7 @@ def run_quiz():
     print(f"\nHoş geldin, {name}! Quiz başlıyor...\n")
 
     score = 0
+    random.shuffle(questions)
     start_time = time.time()  # ⏱️ Quiz başlangıç zamanı
 
     for index, q in enumerate(questions):
