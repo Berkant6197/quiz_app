@@ -4,7 +4,7 @@ import random
 from questions import questions  
 
 current_question_index = 0  
-score = 0  # Skor
+score = 0  
 
 def start_quiz():
     name = name_entry.get().strip()
@@ -18,7 +18,10 @@ def start_quiz():
 def show_question():
     question_frame.pack(pady=20)
     q = questions[current_question_index]
-    question_label.config(text=q["question"])
+    question_label.config(
+        text=f"Soru {current_question_index + 1} / {len(questions)}\n\n{q['question']}"
+)
+
     for i in range(4):
         option_buttons[i].config(text=q["options"][i], state=tk.NORMAL)
 
