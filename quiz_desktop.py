@@ -1,16 +1,20 @@
 import tkinter as tk
 from tkinter import messagebox
 import random
-from questions import questions  
+import time  
+from questions import questions
 
 current_question_index = 0  
 score = 0  
+start_time = 0  
 
 def start_quiz():
+    global start_time
     name = name_entry.get().strip()
     if name:
         welcome_frame.pack_forget()  
         random.shuffle(questions)   
+        start_time = time.time() 
         show_question()
     else:
         messagebox.showwarning("Eksik Bilgi", "Lütfen isminizi girin.")
@@ -20,7 +24,7 @@ def show_question():
     q = questions[current_question_index]
     question_label.config(
         text=f"Soru {current_question_index + 1} / {len(questions)}\n\n{q['question']}"
-)
+    )
 
     for i in range(4):
         option_buttons[i].config(text=q["options"][i], state=tk.NORMAL)
@@ -37,7 +41,14 @@ def check_answer(selected_option):
         show_question()
     else:
         question_frame.pack_forget()
-        messagebox.showinfo("Quiz Bitti", f"Quiz tamamlandı! Doğru sayısı: {score}/{len(questions)}")
+        end_time = time.time() 
+        elapsed_time = end_time - start_time
+        minutes = int(elapsed_time // 60)
+        seconds = int(elapsed_time % 60)
+        messagebox.showinfo(
+            "Quiz Bitti",
+            f"Quiz tamamlandı!\nDoğru sayısı: {score}/{len(questions)}\nGeçen Süre: {minutes} dakika {seconds} saniye"
+        )
 
 window = tk.Tk()
 window.title("Quiz Uygulaması")        
