@@ -41,14 +41,20 @@ def check_answer(selected_option):
         show_question()
     else:
         question_frame.pack_forget()
-        end_time = time.time() 
+        end_time = time.time()
         elapsed_time = end_time - start_time
         minutes = int(elapsed_time // 60)
         seconds = int(elapsed_time % 60)
+        percentage = (score / len(questions)) * 100
+
         messagebox.showinfo(
             "Quiz Bitti",
-            f"Quiz tamamlandı!\nDoğru sayısı: {score}/{len(questions)}\nGeçen Süre: {minutes} dakika {seconds} saniye"
+            f"🎯 Quiz tamamlandı!\n\n"
+            f"✅ Doğru Sayısı: {score} / {len(questions)}\n"
+            f"📊 Başarı Oranı: %{percentage:.2f}\n"
+            f"⏱️ Geçen Süre: {minutes} dakika {seconds} saniye"
         )
+
 
 window = tk.Tk()
 window.title("Quiz Uygulaması")        
