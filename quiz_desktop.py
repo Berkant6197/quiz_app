@@ -7,6 +7,7 @@ from questions import questions
 current_question_index = 0  
 score = 0  
 start_time = 0  
+result_frame = None 
 
 def start_quiz():
     global start_time
@@ -47,14 +48,41 @@ def check_answer(selected_option):
         seconds = int(elapsed_time % 60)
         percentage = (score / len(questions)) * 100
 
-        messagebox.showinfo(
-            "Quiz Bitti",
-            f"🎯 Quiz tamamlandı!\n\n"
-            f"✅ Doğru Sayısı: {score} / {len(questions)}\n"
-            f"📊 Başarı Oranı: %{percentage:.2f}\n"
-            f"⏱️ Geçen Süre: {minutes} dakika {seconds} saniye"
-        )
+        show_result(score, len(questions), percentage, minutes, seconds)
 
+def show_result(score, total, percentage, minutes, seconds):
+    global result_frame
+    result_frame = tk.Frame(window, bg="#f0f0f0")
+    result_frame.pack(pady=40)
+
+    result_label = tk.Label(
+        result_frame,
+        text=(
+            f"🎯 Quiz Tamamlandı!\n\n"
+            f"✅ Doğru Sayısı: {score} / {total}\n"
+            f"📊 Başarı Oranı: %{percentage:.2f}\n"
+            f"⏱️ Süre: {minutes} dakika {seconds} saniye"
+        ),
+        font=("Arial", 14),
+        bg="#f0f0f0",
+        justify="center"
+    )
+    result_label.pack(pady=10)
+
+    retry_button = tk.Button(result_frame, text="🔁 Tekrar Dene", font=("Arial", 12), command=restart_quiz)
+    retry_button.pack(pady=5)
+
+    exit_button = tk.Button(result_frame, text="❌ Çıkış", font=("Arial", 12), command=window.destroy)
+    exit_button.pack(pady=5)
+
+def restart_quiz():
+    global current_question_index, score, start_time
+    current_question_index = 0
+    score = 0
+    start_time = 0
+    result_frame.pack_forget()
+    name_entry.delete(0, tk.END)
+    welcome_frame.pack(pady=40)
 
 window = tk.Tk()
 window.title("Quiz Uygulaması")        
