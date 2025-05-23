@@ -4,6 +4,8 @@ import random
 import time  
 from questions import questions
 
+timer_id = None
+time_per_question = 10  
 current_question_index = 0  
 score = 0  
 start_time = 0  
@@ -21,6 +23,7 @@ def start_quiz():
         messagebox.showwarning("Eksik Bilgi", "Lütfen isminizi girin.")
 
 def show_question():
+    global timer_id
     question_frame.pack(pady=20)
     q = questions[current_question_index]
     question_label.config(
@@ -30,8 +33,11 @@ def show_question():
     for i in range(4):
         option_buttons[i].config(text=q["options"][i], state=tk.NORMAL)
 
+    start_timer(time_per_question)
+
 def check_answer(selected_option):
     global current_question_index, score
+    stop_timer()
 
     correct = questions[current_question_index]["answer"]
     if selected_option == correct:
@@ -46,9 +52,27 @@ def check_answer(selected_option):
         elapsed_time = end_time - start_time
         minutes = int(elapsed_time // 60)
         seconds = int(elapsed_time % 60)
-        percentage = (score / len(questions)) * 100
+        percentage = (score / len(questions)) * 100 
+
 
         show_result(score, len(questions), percentage, minutes, seconds)
+
+  
+def start_timer(seconds_left):
+    global timer_id
+    if seconds_left > 0:
+        timer_label.config(text=f"Kalan Süre: {seconds_left} saniye")
+        timer_id = window.after(1000, start_timer, seconds_left - 1)
+    else:
+        timer_label.config(text="Süre doldu!")
+        disable_buttons()
+        window.after(1000, lambda: check_answer(None))  
+
+def stop_timer():
+    global timer_id
+    if timer_id is not None:
+        window.after_cancel(timer_id)
+        timer_id = None
 
 def show_result(score, total, percentage, minutes, seconds):
     global result_frame
@@ -108,6 +132,10 @@ question_frame = tk.Frame(window, bg="#f0f0f0")
 
 question_label = tk.Label(question_frame, text="", font=("Arial", 14), wraplength=400, bg="#f0f0f0")
 question_label.pack(pady=20)
+
+timer_label = tk.Label(question_frame, text="", font=("Arial", 12), bg="#f0f0f0", fg="red")
+timer_label.pack(pady=5)
+
 
 option_buttons = []
 options = ['A', 'B', 'C', 'D']
