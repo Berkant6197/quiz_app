@@ -1,23 +1,23 @@
 import tkinter as tk
 from tkinter import messagebox
 import random
-import time  
+import time
 from questions import questions
 
 timer_id = None
-time_per_question = 10  
-current_question_index = 0  
-score = 0  
-start_time = 0  
-result_frame = None 
+time_per_question = 10
+current_question_index = 0
+score = 0
+start_time = 0
+result_frame = None
 
 def start_quiz():
     global start_time
     name = name_entry.get().strip()
     if name:
-        welcome_frame.pack_forget()  
-        random.shuffle(questions)   
-        start_time = time.time() 
+        welcome_frame.pack_forget()
+        random.shuffle(questions)
+        start_time = time.time()
         show_question()
     else:
         messagebox.showwarning("Eksik Bilgi", "Lütfen isminizi girin.")
@@ -45,19 +45,16 @@ def check_answer(selected_option):
 
     current_question_index += 1
     if current_question_index < len(questions):
-        show_question()
+        window.after(1000, show_question)
     else:
         question_frame.pack_forget()
         end_time = time.time()
         elapsed_time = end_time - start_time
         minutes = int(elapsed_time // 60)
         seconds = int(elapsed_time % 60)
-        percentage = (score / len(questions)) * 100 
-
-
+        percentage = (score / len(questions)) * 100
         show_result(score, len(questions), percentage, minutes, seconds)
 
-  
 def start_timer(seconds_left):
     global timer_id
     if seconds_left > 0:
@@ -66,7 +63,7 @@ def start_timer(seconds_left):
     else:
         timer_label.config(text="Süre doldu!")
         disable_buttons()
-        window.after(1000, lambda: check_answer(None))  
+        window.after(1000, lambda: check_answer(None))
 
 def stop_timer():
     global timer_id
@@ -74,9 +71,13 @@ def stop_timer():
         window.after_cancel(timer_id)
         timer_id = None
 
+def disable_buttons():
+    for btn in option_buttons:
+        btn.config(state=tk.DISABLED)
+
 def show_result(score, total, percentage, minutes, seconds):
     global result_frame
-    result_frame = tk.Frame(window, bg="#f0f0f0")
+    result_frame = tk.Frame(window, bg="#ffffff")
     result_frame.pack(pady=40)
 
     result_label = tk.Label(
@@ -87,16 +88,19 @@ def show_result(score, total, percentage, minutes, seconds):
             f"📊 Başarı Oranı: %{percentage:.2f}\n"
             f"⏱️ Süre: {minutes} dakika {seconds} saniye"
         ),
-        font=("Arial", 14),
-        bg="#f0f0f0",
+        font=("Helvetica", 14, "bold"),
+        bg="#ffffff",
+        fg="#333333",
         justify="center"
     )
     result_label.pack(pady=10)
 
-    retry_button = tk.Button(result_frame, text="🔁 Tekrar Dene", font=("Arial", 12), command=restart_quiz)
+    retry_button = tk.Button(result_frame, text="🔁 Tekrar Dene", font=("Arial", 12, "bold"),
+                             bg="#4CAF50", fg="white", width=20, command=restart_quiz)
     retry_button.pack(pady=5)
 
-    exit_button = tk.Button(result_frame, text="❌ Çıkış", font=("Arial", 12), command=window.destroy)
+    exit_button = tk.Button(result_frame, text="❌ Çıkış", font=("Arial", 12, "bold"),
+                            bg="#f44336", fg="white", width=20, command=window.destroy)
     exit_button.pack(pady=5)
 
 def restart_quiz():
@@ -109,40 +113,43 @@ def restart_quiz():
     welcome_frame.pack(pady=40)
 
 window = tk.Tk()
-window.title("Quiz Uygulaması")        
-window.geometry("500x400")            
-window.configure(bg="#f0f0f0")         
+window.title("🎓 Quiz Uygulaması")
+window.geometry("550x500")
+window.configure(bg="#e0f7fa")
 
-welcome_frame = tk.Frame(window, bg="#f0f0f0")
+welcome_frame = tk.Frame(window, bg="#e0f7fa")
 welcome_frame.pack(pady=40)
 
-greeting_label = tk.Label(welcome_frame, text="🎓 Quiz Uygulamasına Hoş Geldiniz!", font=("Arial", 14), bg="#f0f0f0")
+greeting_label = tk.Label(welcome_frame, text="🎓 Quiz Uygulamasına Hoş Geldiniz!",
+                          font=("Helvetica", 16, "bold"), bg="#e0f7fa", fg="#00796B")
 greeting_label.pack(pady=10)
 
-name_label = tk.Label(welcome_frame, text="İsminizi giriniz:", font=("Arial", 12), bg="#f0f0f0")
+name_label = tk.Label(welcome_frame, text="İsminizi giriniz:", font=("Arial", 12), bg="#e0f7fa")
 name_label.pack()
 
-name_entry = tk.Entry(welcome_frame, font=("Arial", 12))
+name_entry = tk.Entry(welcome_frame, font=("Arial", 12), width=30)
 name_entry.pack(pady=10)
 
-start_button = tk.Button(welcome_frame, text="Başla", font=("Arial", 12), command=start_quiz)
+start_button = tk.Button(welcome_frame, text="🚀 Başla", font=("Arial", 12, "bold"),
+                         bg="#0288D1", fg="white", width=20, command=start_quiz)
 start_button.pack(pady=10)
 
-question_frame = tk.Frame(window, bg="#f0f0f0")
+question_frame = tk.Frame(window, bg="#e0f7fa")
 
-question_label = tk.Label(question_frame, text="", font=("Arial", 14), wraplength=400, bg="#f0f0f0")
+question_label = tk.Label(question_frame, text="", font=("Arial", 14), wraplength=450,
+                          bg="#e0f7fa", justify="center")
 question_label.pack(pady=20)
 
-timer_label = tk.Label(question_frame, text="", font=("Arial", 12), bg="#f0f0f0", fg="red")
+timer_label = tk.Label(question_frame, text="", font=("Arial", 12, "bold"),
+                       bg="#e0f7fa", fg="red")
 timer_label.pack(pady=5)
 
-
 option_buttons = []
-options = ['A', 'B', 'C', 'D']
-for opt in options:
+for _ in range(4):
     btn = tk.Button(question_frame, text="", font=("Arial", 12), width=40,
-                    command=lambda opt=opt: check_answer(opt))
-    btn.pack(pady=5)
+                    bg="#ffffff", relief=tk.RAISED,
+                    activebackground="#B2EBF2", command=lambda opt=_: check_answer(option_buttons[opt]["text"]))
+    btn.pack(pady=6)
     option_buttons.append(btn)
 
 window.mainloop()
