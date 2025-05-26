@@ -58,5 +58,55 @@ questions = [
         "question": "Python'da ‘lambda’ ne işe yarar?",
         "options": ["A) Döngü oluşturur", "B) Koşul kontrolü yapar", "C) Anonim fonksiyon tanımlar", "D) Modül import eder"],
         "answer": "C"
+    },
+    {
+        "question": "Python'da bir modülü içe aktarmak için hangi komut kullanılır?",
+        "options": ["A) using", "B) include", "C) import", "D) require"],
+        "answer": "C"
+    },
+    {
+        "question": "Hangisi Python’da bir sözlük (dictionary) tanımıdır?",
+        "options": ["A) []", "B) {}", "C) ()", "D) <>"],
+        "answer": "B"
+    },
+    {
+        "question": "Python’da hangi veri tipi ondalıklı sayıları ifade eder?",
+        "options": ["A) int", "B) str", "C) float", "D) bool"],
+        "answer": "C"
+    },
+    {
+        "question": "Python’da mantıksal VE işlemi hangi anahtar kelimeyle yapılır?",
+        "options": ["A) &", "B) and", "C) &&", "D) with"],
+        "answer": "B"
+    },
+    {
+        "question": "Python’da ‘break’ komutu ne işe yarar?",
+        "options": ["A) Döngüyü sonlandırır", "B) Bir fonksiyonu çağırır", "C) Hatayı yakalar", "D) Değişken oluşturur"],
+        "answer": "A"
+    },
+    {
+        "question": "Python’da ‘len()’ fonksiyonu ne işe yarar?",
+        "options": ["A) Listeyi sıralar", "B) Eleman ekler", "C) Uzunluğu döner", "D) Silme işlemi yapar"],
+        "answer": "C"
+    },
+    {
+        "question": "Hangisi Python'da boolean (mantıksal) değerdir?",
+        "options": ["A) 'True'", "B) 'Yes'", "C) 1", "D) 'On'"],
+        "answer": "A"
+    },
+    {
+        "question": "Python'da try-except bloğu ne için kullanılır?",
+        "options": ["A) Döngü kurmak için", "B) Dosya okumak için", "C) Hata yakalamak için", "D) Fonksiyon tanımlamak için"],
+        "answer": "C"
+    },
+    {
+        "question": "Python'da bir listeye eleman eklemek için hangi yöntem kullanılır?",
+        "options": ["A) add()", "B) push()", "C) append()", "D) insert()"],
+        "answer": "C"
+    },
+    {
+        "question": "Python'da yorum satırları dışında açıklama eklemek için ne kullanılır?",
+        "options": ["A) ‘--’", "B) '''çok satırlı açıklama'''", "C) <!-- -->", "D) **"],
+        "answer": "B"
     }
 ]
