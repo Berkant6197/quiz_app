@@ -42,18 +42,22 @@ def check_answer(selected_option):
     correct = questions[current_question_index]["answer"]
     if selected_option == correct:
         score += 1
-
-    current_question_index += 1
-    if current_question_index < len(questions):
-        window.after(1000, show_question)
+        feedback = "✅ Doğru!"
     else:
-        question_frame.pack_forget()
-        end_time = time.time()
-        elapsed_time = end_time - start_time
-        minutes = int(elapsed_time // 60)
-        seconds = int(elapsed_time % 60)
-        percentage = (score / len(questions)) * 100
-        show_result(score, len(questions), percentage, minutes, seconds)
+        feedback = f"❌ Yanlış! Doğru cevap: {correct}"
+
+    disable_buttons()
+    timer_label.config(text=feedback)
+    current_question_index += 1
+
+    if current_question_index < len(questions):
+        window.after(2000, show_question)
+    else:
+        window.after(2000, lambda: question_frame.pack_forget())
+        window.after(2000, lambda: show_result(score, len(questions), (score / len(questions)) * 100,
+      int(time.time() - start_time) // 60,
+     int(time.time() - start_time) % 60))
+
 
 def start_timer(seconds_left):
     global timer_id
