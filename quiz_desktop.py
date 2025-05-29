@@ -10,6 +10,8 @@ current_question_index = 0
 score = 0
 start_time = 0
 result_frame = None
+skipped_questions = 0
+
 
 def start_quiz():
     global start_time
@@ -36,11 +38,15 @@ def show_question():
     start_timer(time_per_question)
 
 def check_answer(selected_option):
-    global current_question_index, score
+    global current_question_index, score, skipped_questions
     stop_timer()
 
     correct = questions[current_question_index]["answer"]
-    if selected_option == correct:
+
+    if selected_option is None:
+        feedback = f"⏭️ Atlandı! Doğru cevap: {correct}"
+        skipped_questions += 1
+    elif selected_option == correct:
         score += 1
         feedback = "✅ Doğru!"
     else:
@@ -53,10 +59,13 @@ def check_answer(selected_option):
     if current_question_index < len(questions):
         window.after(2000, show_question)
     else:
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        minutes = int(elapsed_time // 60)
+        seconds = int(elapsed_time % 60)
+        percentage = (score / len(questions)) * 100
         window.after(2000, lambda: question_frame.pack_forget())
-        window.after(2000, lambda: show_result(score, len(questions), (score / len(questions)) * 100,
-      int(time.time() - start_time) // 60,
-     int(time.time() - start_time) % 60))
+        window.after(2000, lambda: show_result(score, len(questions), percentage, minutes, seconds, skipped_questions))
 
 
 def start_timer(seconds_left):
@@ -79,7 +88,7 @@ def disable_buttons():
     for btn in option_buttons:
         btn.config(state=tk.DISABLED)
 
-def show_result(score, total, percentage, minutes, seconds):
+def show_result(score, total, percentage, minutes, seconds,skipped):
     global result_frame
     result_frame = tk.Frame(window, bg="#ffffff")
     result_frame.pack(pady=40)
@@ -89,6 +98,7 @@ def show_result(score, total, percentage, minutes, seconds):
         text=(
             f"🎯 Quiz Tamamlandı!\n\n"
             f"✅ Doğru Sayısı: {score} / {total}\n"
+            f"⏭️ Boş Bırakılan: {skipped}\n"
             f"📊 Başarı Oranı: %{percentage:.2f}\n"
             f"⏱️ Süre: {minutes} dakika {seconds} saniye"
         ),
@@ -112,6 +122,7 @@ def restart_quiz():
     current_question_index = 0
     score = 0
     start_time = 0
+    skipped_questions = 0
     result_frame.pack_forget()
     name_entry.delete(0, tk.END)
     welcome_frame.pack(pady=40)
@@ -155,5 +166,9 @@ for _ in range(4):
                     activebackground="#B2EBF2", command=lambda opt=_: check_answer(option_buttons[opt]["text"]))
     btn.pack(pady=6)
     option_buttons.append(btn)
+    skip_button = tk.Button(question_frame, text="⏭️ Atla", font=("Arial", 12), width=20,
+                        bg="#FFA726", fg="white", command=lambda: check_answer(None))
+skip_button.pack(pady=6)
+
 
 window.mainloop()
