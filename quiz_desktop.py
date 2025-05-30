@@ -4,6 +4,26 @@ import random
 import time
 from questions import questions
 
+# Tema tanımları
+themes = {
+    "light": {
+        "bg": "#e0f7fa",
+        "fg": "#000000",
+        "button_bg": "#ffffff",
+        "button_fg": "#000000",
+        "active_bg": "#B2EBF2"
+    },
+    "dark": {
+        "bg": "#000000",
+        "fg": "#ffffff",
+        "button_bg": "#000000",
+        "button_fg": "#ffffff",
+        "active_bg": "#000000"
+    }
+}
+
+current_theme = "light"
+
 timer_id = None
 time_per_question = 10
 current_question_index = 0
@@ -11,7 +31,6 @@ score = 0
 start_time = 0
 result_frame = None
 skipped_questions = 0
-
 
 def start_quiz():
     global start_time
@@ -31,10 +50,8 @@ def show_question():
     question_label.config(
         text=f"Soru {current_question_index + 1} / {len(questions)}\n\n{q['question']}"
     )
-
     for i in range(4):
         option_buttons[i].config(text=q["options"][i], state=tk.NORMAL)
-
     start_timer(time_per_question)
 
 def check_answer(selected_option):
@@ -67,7 +84,6 @@ def check_answer(selected_option):
         window.after(2000, lambda: question_frame.pack_forget())
         window.after(2000, lambda: show_result(score, len(questions), percentage, minutes, seconds, skipped_questions))
 
-
 def start_timer(seconds_left):
     global timer_id
     if seconds_left > 0:
@@ -88,9 +104,9 @@ def disable_buttons():
     for btn in option_buttons:
         btn.config(state=tk.DISABLED)
 
-def show_result(score, total, percentage, minutes, seconds,skipped):
+def show_result(score, total, percentage, minutes, seconds, skipped):
     global result_frame
-    result_frame = tk.Frame(window, bg="#ffffff")
+    result_frame = tk.Frame(window)
     result_frame.pack(pady=40)
 
     result_label = tk.Label(
@@ -103,22 +119,21 @@ def show_result(score, total, percentage, minutes, seconds,skipped):
             f"⏱️ Süre: {minutes} dakika {seconds} saniye"
         ),
         font=("Helvetica", 14, "bold"),
-        bg="#ffffff",
-        fg="#333333",
         justify="center"
     )
     result_label.pack(pady=10)
 
     retry_button = tk.Button(result_frame, text="🔁 Tekrar Dene", font=("Arial", 12, "bold"),
-                             bg="#4CAF50", fg="white", width=20, command=restart_quiz)
+                             width=20, command=restart_quiz)
     retry_button.pack(pady=5)
 
     exit_button = tk.Button(result_frame, text="❌ Çıkış", font=("Arial", 12, "bold"),
-                            bg="#f44336", fg="white", width=20, command=window.destroy)
+                            width=20, command=window.destroy)
     exit_button.pack(pady=5)
+    apply_theme()
 
 def restart_quiz():
-    global current_question_index, score, start_time
+    global current_question_index, score, start_time, skipped_questions
     current_question_index = 0
     score = 0
     start_time = 0
@@ -127,48 +142,89 @@ def restart_quiz():
     name_entry.delete(0, tk.END)
     welcome_frame.pack(pady=40)
 
+def toggle_theme():
+    global current_theme
+    current_theme = "dark" if current_theme == "light" else "light"
+    apply_theme()
+
+def apply_theme():
+    theme = themes[current_theme]
+    window.configure(bg=theme["bg"])
+    welcome_frame.configure(bg=theme["bg"])
+    question_frame.configure(bg=theme["bg"])
+    if result_frame:
+        result_frame.configure(bg=theme["bg"])
+
+    for widget in welcome_frame.winfo_children():
+        widget.configure(bg=theme["bg"], fg=theme["fg"])
+
+    for widget in question_frame.winfo_children():
+        if isinstance(widget, tk.Button):
+            widget.configure(
+                bg=theme["button_bg"],
+                fg=theme["button_fg"],
+                activebackground=theme["active_bg"]
+            )
+        else:
+            widget.configure(bg=theme["bg"], fg=theme["fg"])
+
+    if result_frame:
+        for widget in result_frame.winfo_children():
+            if isinstance(widget, tk.Button):
+                widget.configure(
+                    bg=theme["button_bg"],
+                    fg=theme["button_fg"],
+                    activebackground=theme["active_bg"]
+                )
+            else:
+                widget.configure(bg=theme["bg"], fg=theme["fg"])
+
 window = tk.Tk()
 window.title("🎓 Quiz Uygulaması")
 window.geometry("550x500")
-window.configure(bg="#e0f7fa")
 
-welcome_frame = tk.Frame(window, bg="#e0f7fa")
+welcome_frame = tk.Frame(window)
 welcome_frame.pack(pady=40)
 
 greeting_label = tk.Label(welcome_frame, text="🎓 Quiz Uygulamasına Hoş Geldiniz!",
-                          font=("Helvetica", 16, "bold"), bg="#e0f7fa", fg="#00796B")
+                          font=("Helvetica", 16, "bold"))
 greeting_label.pack(pady=10)
 
-name_label = tk.Label(welcome_frame, text="İsminizi giriniz:", font=("Arial", 12), bg="#e0f7fa")
+name_label = tk.Label(welcome_frame, text="İsminizi giriniz:", font=("Arial", 12))
 name_label.pack()
 
 name_entry = tk.Entry(welcome_frame, font=("Arial", 12), width=30)
 name_entry.pack(pady=10)
 
 start_button = tk.Button(welcome_frame, text="🚀 Başla", font=("Arial", 12, "bold"),
-                         bg="#0288D1", fg="white", width=20, command=start_quiz)
+                         width=20, command=start_quiz)
 start_button.pack(pady=10)
 
-question_frame = tk.Frame(window, bg="#e0f7fa")
+theme_button = tk.Button(welcome_frame, text="🌓 Tema Değiştir", font=("Arial", 10),
+                         command=toggle_theme)
+theme_button.pack(pady=5)
 
-question_label = tk.Label(question_frame, text="", font=("Arial", 14), wraplength=450,
-                          bg="#e0f7fa", justify="center")
+question_frame = tk.Frame(window)
+
+question_label = tk.Label(question_frame, text="", font=("Arial", 14), wraplength=450, justify="center")
 question_label.pack(pady=20)
 
-timer_label = tk.Label(question_frame, text="", font=("Arial", 12, "bold"),
-                       bg="#e0f7fa", fg="red")
+timer_label = tk.Label(question_frame, text="", font=("Arial", 12, "bold"), fg="red")
 timer_label.pack(pady=5)
 
 option_buttons = []
 for _ in range(4):
+for i in range(4):
     btn = tk.Button(question_frame, text="", font=("Arial", 12), width=40,
-                    bg="#ffffff", relief=tk.RAISED,
-                    activebackground="#B2EBF2", command=lambda opt=_: check_answer(option_buttons[opt]["text"]))
+                    relief=tk.RAISED,
+                    command=lambda opt=i: check_answer(option_buttons[opt]["text"]))
     btn.pack(pady=6)
     option_buttons.append(btn)
-    skip_button = tk.Button(question_frame, text="⏭️ Atla", font=("Arial", 12), width=20,
-                        bg="#FFA726", fg="white", command=lambda: check_answer(None))
+
+skip_button = tk.Button(question_frame, text="⏭️ Atla", font=("Arial", 12), width=20,
+                        command=lambda: check_answer(None))
 skip_button.pack(pady=6)
 
-
+apply_theme()
 window.mainloop()
+
