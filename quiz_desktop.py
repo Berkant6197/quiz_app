@@ -4,7 +4,6 @@ import random
 import time
 from questions import questions
 
-# Tema tanımları
 themes = {
     "light": {
         "bg": "#e0f7fa",
@@ -182,6 +181,11 @@ def apply_theme():
 window = tk.Tk()
 window.title("🎓 Quiz Uygulaması")
 window.geometry("550x500")
+window.attributes("-fullscreen", True)
+def exit_fullscreen(event=None):
+    window.attributes("-fullscreen", False)
+
+window.bind("<Escape>", exit_fullscreen)
 
 welcome_frame = tk.Frame(window)
 welcome_frame.pack(pady=40)
@@ -213,7 +217,6 @@ timer_label = tk.Label(question_frame, text="", font=("Arial", 12, "bold"), fg="
 timer_label.pack(pady=5)
 
 option_buttons = []
-for _ in range(4):
 for i in range(4):
     btn = tk.Button(question_frame, text="", font=("Arial", 12), width=40,
                     relief=tk.RAISED,
