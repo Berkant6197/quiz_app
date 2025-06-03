@@ -51,6 +51,8 @@ def show_question():
     )
     for i in range(4):
         option_buttons[i].config(text=q["options"][i], state=tk.NORMAL)
+        theme = themes[current_theme]
+    timer_label.config(text="", fg=theme["fg"])
     start_timer(time_per_question)
 
 def check_answer(selected_option):
@@ -58,15 +60,19 @@ def check_answer(selected_option):
     stop_timer()
 
     correct = questions[current_question_index]["answer"]
+    correct_option_text = questions[current_question_index]["options"][ord(correct.upper()) - ord('A')]
 
     if selected_option is None:
         feedback = f"⏭️ Atlandı! Doğru cevap: {correct}"
+        timer_label.config(fg="orange")
         skipped_questions += 1
-    elif selected_option == correct:
+    elif selected_option.strip() == correct_option_text.strip():
         score += 1
         feedback = "✅ Doğru!"
+        timer_label.config(fg="green")
     else:
         feedback = f"❌ Yanlış! Doğru cevap: {correct}"
+        timer_label.config(fg="red")
 
     disable_buttons()
     timer_label.config(text=feedback)
